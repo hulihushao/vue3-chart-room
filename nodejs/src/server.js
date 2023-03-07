@@ -9,6 +9,7 @@ const router = express.Router();
 //get接口的开发
 app.get("/data", (err, res) => {
   let userData=require("../data/user.json")
+  console.log(userData)
   res.send({
     code: 200,
     data: userData,
