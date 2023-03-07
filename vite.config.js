@@ -15,7 +15,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://7hzgov-9588.preview.csb.app/",
+        target: "http://localhost:9588/",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       },
