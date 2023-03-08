@@ -4,7 +4,11 @@ const express = require("express");
 let { write } = require("./fileWrite");
 //创建web服务器
 const app = express();
-const router = express.Router();
+//配置解析表单数据(application/x-www-form-urlencoded)格式的中间件
+app.use(express.urlencoded({ extended: true }));
+
+const login =require("../router/login")
+app.use("",login)
 
 //get接口的开发
 app.get("/data", (err, res) => {
@@ -15,9 +19,6 @@ app.get("/data", (err, res) => {
     data: userData,
   });
 });
-
-//配置解析表单数据(application/x-www-form-urlencoded)格式的中间件
-app.use(express.urlencoded({ extended: false }));
 
 app.post("/insert", (req, res) => {
   let newList = req.body;
