@@ -10,6 +10,9 @@ app.use(express.urlencoded({ extended: true }));
 const login =require("../router/login")
 app.use("",login)
 
+const getFeature =require("../router/feature")
+app.use("",getFeature)
+
 //get接口的开发
 app.get("/data", (err, res) => {
   let userData=require("../data/user.json")
