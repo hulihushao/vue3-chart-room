@@ -5,7 +5,6 @@ const router = express.Router();
 router.post("/login", (req, res) => {
   console.log(req.body);
   let { userName, pwd } = req.body
-  console.log(userName)
   let userData = require("../data/user.json");
   let one = userData.filter((item) => item.userName == userName);
   if (one.length) {
