@@ -61,7 +61,7 @@ let getData=()=>{
   axios.get("/api/data").then(res=>{
     textarea.value=JSON.stringify(res.data)
   }).catch(err=>{
-    textarea.value=err
+    textarea.value=JSON.stringify(err)
   })
 }
 let insertData=()=>{

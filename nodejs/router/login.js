@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.post("/login", (req, res) => {
   console.log(req.body);
-  let { userName, pwd } = req.body
+  let { userName, pwd } = req.body;
   let userData = require("../data/user.json");
   let one = userData.filter((item) => item.userName == userName);
   if (one.length) {
@@ -13,17 +13,17 @@ router.post("/login", (req, res) => {
         code: 200,
         data: one,
       });
-    }else{
-        res.send({
-        code: 500,
-        data:"密码错误",
-      })
-    }
-  }else{
+    } else {
       res.send({
-        code: 404,
-        data: "用户不存在",
-      })
+        code: 500,
+        data: "密码错误",
+      });
+    }
+  } else {
+    res.status(404).send({
+
+      message:"用户不存在"
+    })
   }
 });
 // 导出

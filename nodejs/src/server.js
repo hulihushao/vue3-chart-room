@@ -8,8 +8,8 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 
 app.use(function (req, res, next) {
-  console.log("设置跨域响应头")
-  console.log(req.method+" "+req.url)
+  console.log("设置跨域响应头");
+  console.log(req.method + " " + req.url);
   // 所有的接口都可以访问
   res.header("Access-Control-Allow-Origin", "*"); //自定义中间件，设置跨域需要的响应头。
   res.header("Access-Control-Allow-Headers", "*"); //自定义中间件，设置跨域需要的响应头。
@@ -26,12 +26,11 @@ app.use("", getFeature);
 app.get("/data", (err, res) => {
   let userData = require("../data/user.json");
   console.log(userData);
-  res.setHeader("Access-Control-Allow-Origin", "*");
-
-  res.send({
+  res.status(200).send({
     code: 200,
     data: userData,
   });
+
 });
 
 app.post("/insert", (req, res) => {
