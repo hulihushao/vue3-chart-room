@@ -30,18 +30,26 @@ app.get("/data", (err, res) => {
     code: 200,
     data: userData,
   });
-
 });
 
 app.post("/insert", (req, res) => {
   let newList = req.body;
   console.log(newList);
-  write(newList, (newData) => {
-    res.send({
-      code: 200,
-      data: newData,
-    });
-  });
+  write(
+    newList,
+    (arr) => {
+      let obj = { userId: arr.length + 1, ...newList};
+      //2.1.给数组添加元素
+      arr.push(obj);
+      return {arr,obj}
+    },
+    (newData) => {
+      res.send({
+        code: 200,
+        data: newData,
+      });
+    }
+  );
 });
 
 module.exports = app;
