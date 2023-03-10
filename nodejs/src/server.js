@@ -36,7 +36,7 @@ app.post("/insert", (req, res) => {
   let newList = req.body;
   console.log(newList);
   write(
-    newList,
+    "user.json",
     (arr) => {
       let obj = { userId: arr.length + 1, ...newList};
       //2.1.给数组添加元素

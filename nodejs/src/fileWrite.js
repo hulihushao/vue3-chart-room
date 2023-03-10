@@ -4,7 +4,7 @@ const path = require("path");
 
 function write(value,dataCallback,callback) {
   //1.读取data.json文件
-  let dir = path.join("./data", "user.json");
+  let dir = path.join("./data", value);
   fs.readFile(dir, "utf8", (err, data) => {
     if (err) {
       console.log(err);
