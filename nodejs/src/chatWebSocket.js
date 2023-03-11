@@ -14,7 +14,7 @@ function chatWebSocketServer() {
   let broadcast = (message) => {
     server.clients.forEach(function each(client) {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(message);
+        client.send(JSON.stringify(message));
       }
     });
   };
