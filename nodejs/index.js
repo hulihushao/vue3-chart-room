@@ -1,7 +1,8 @@
 let webSocketServer = require("./src/websocket.js");
+let chatWebSocketServer = require("./src/chatWebSocket.js");
 let app=require("./src/server")
 webSocketServer();
-
+chatWebSocketServer()
 const os = require("os");
 function getIPAdress() {
   var interfaces = os.networkInterfaces();

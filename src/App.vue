@@ -6,7 +6,8 @@
 
   <router-link active-class="active" :to="{path:'/'}">home</router-link>||
     <router-link active-class="active" :to="{path:'/about'}">about</router-link>||
-     <router-link active-class="active" :to="{path:'/usercenter'}">userCenter</router-link>
+     <router-link active-class="active" :to="{path:'/usercenter'}">userCenter</router-link>||
+     <router-link active-class="active" :to="{path:'/chat'}">chat聊天室</router-link>
     <router-view/>
 </template>
 

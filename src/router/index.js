@@ -27,6 +27,11 @@ const router = createRouter({
       name: "usercenter",
       component: () => import("@/views/userCenter.vue"),
     },
+    {
+      path: "/chat",
+      name: "chat",
+      component: () => import("@/views/Chat.vue"),
+    },
     // 所有不存在的路由都走404
     {
       path: "/:pathMatch(.*)*",
