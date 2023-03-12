@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import moment from "moment";
-import { ref, onMounted } from "vue";
+import { ref, onMounted ,computed} from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import {useWebSocket,useOnMessage} from "../hooks/useWebSocket.js"
 let menuList = ref<object[]>([
@@ -20,7 +20,7 @@ let bridge = ref([]);
 let uid = ref(1);
 let msg=ref("")
 let title = ref("");
-let currentMessage = ref([]);
+//let currentMessage = ref([]);
 let messageList = ref([
   {
     type: 1,
@@ -64,18 +64,23 @@ let clickMenu = (value: messageItem) => {
   } else if (value.usertype == 2) {
     bridge.value = [uid.value, value.uid];
   }
-  currentMessage.value = messageList.value.filter(
+  /**currentMessage.value = messageList.value.filter(
     (item) => item.bridge.sort().join("") == bridge.value.sort().join("")
-  );
+  );*/
 };
+
+let currentMessage=computed(()=>{
+  return messageList.value.filter(
+    (item) => item.bridge.sort().join("") == bridge.value.sort().join("")
+  )
+})
 onMounted(() => {
   let u=localStorage.getItem("userInfo")
   if(u){
     menuList.value.unshift({
-
       nickname:JSON.parse(u).nickname+"(YOU)"
     })
-    let WebSocket=useWebSocket(messageList,{...JSON.parse(u),type:1})
+    let WebSocket=useWebSocket(messageList,{...JSON.parse(u),type:1,date:moment().format("YYYY-MM-DD HH:mm:ss")})
     return
   }
   ElMessageBox.prompt("请输入昵称", "提示", {
@@ -84,7 +89,7 @@ onMounted(() => {
     closeOnClickModal:false,
     inputValidator: (value) => {
       let some = menuList.value.some((item) => item.nickname == value);
-
+if(!value) return "请输入昵称!"
       if (some) return "昵称已存在!";
     },
   }).then(({ value }) => {
