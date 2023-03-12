@@ -12,7 +12,7 @@ let uid = ref(1);
 let users = ref([]);
 let title = ref("");
 let WebSocket = ref(null);
-let userInfo={}
+let userInfo = {};
 //let currentMessage = ref([]);
 let messageList = ref([
   {
@@ -69,17 +69,19 @@ let currentMessage = computed(() => {
   );
 });
 let usersList = computed(() => {
-  if(!menuList.value.length)return users.value
-  let index =users.value.findIndex(item=>item.nickname+"(YOU)"==menuList.value[0].nickname)
-  users.value.splice(index,1)
+  if (!menuList.value.length) return users.value;
+  let index = users.value.findIndex(
+    (item) => item.nickname + "(YOU)" == menuList.value[0].nickname
+  );
+  users.value.splice(index, 1);
   users.value.unshift(menuList.value[0]);
-  return users.value
+  return users.value;
 });
 onMounted(() => {
   let u = localStorage.getItem("userInfo");
   if (u) {
-    userInfo=JSON.parse(u)
-    uid.value=userInfo.uid
+    userInfo = JSON.parse(u);
+    uid.value = userInfo.uid;
     menuList.value.unshift({
       nickname: JSON.parse(u).nickname + "(YOU)",
     });
@@ -104,11 +106,11 @@ onMounted(() => {
     },
   }).then(({ value }) => {
     let user = {
-      uid: menuList.value.length + "1"+Math.random()*100000,
+      uid: menuList.value.length + "1" + Math.random() * 100000,
       nickname: value,
       usertype: 2,
     };
-        uid.value=user.uid
+    uid.value = user.uid;
     localStorage.setItem("userInfo", JSON.stringify(user));
     menuList.value.unshift({
       nickname: value + "(YOU)",
@@ -127,21 +129,21 @@ onMounted(() => {
     });
   });
 });
-let submit=()=>{
-  useSend(WebSocket,{
-      ...userInfo,
-      type: 2,
-      date: moment().format("YYYY-MM-DD HH:mm:ss"),
-      users: users.value,
-      msg: textarea.value,
-      bridge: bridge.value,
-    })
-    textarea.value=""
-}
-let removeUserInfo=()=>{
-  localStorage.removeItem("userInfo")
-  location.reload()
-}
+let submit = () => {
+  useSend(WebSocket, {
+    ...userInfo,
+    type: 2,
+    date: moment().format("YYYY-MM-DD HH:mm:ss"),
+    users: users.value,
+    msg: textarea.value,
+    bridge: bridge.value,
+  });
+  textarea.value = "";
+};
+let removeUserInfo = () => {
+  localStorage.removeItem("userInfo");
+  location.reload();
+};
 </script>
 
 <template>
@@ -152,7 +154,7 @@ let removeUserInfo=()=>{
         v-for="item in usersList"
         :key="item.nickname"
         @click="clickMenu(item)"
-        :class="{ active: bridge[1] == item.uid&&chatType==item.usertype }"
+        :class="{ active: bridge[1] == item.uid && chatType == item.usertype }"
       >
         {{ item.nickname }}
       </p>
@@ -181,8 +183,11 @@ let removeUserInfo=()=>{
               {{ item.date }}
             </p>
             <div class="message-box">
-              <span
-                :style="{ background: item.uid == 1 ? '#79D289' : '#eee' }"
+              <span class="avatar" v-if="item.uid !=uid"
+                ><el-avatar> {{ item.nickname }} </el-avatar></span
+              >
+              <span class="content-msg"
+                :style="{ background: item.uid == uid ? '#79D289' : '#eee' }"
                 >{{ item.msg }}</span
               >
             </div>
@@ -251,8 +256,8 @@ let removeUserInfo=()=>{
       .join-tips {
         text-align: center;
         color: #ccc;
-        font-size:12px;
-        line-height:12px;
+        font-size: 12px;
+        line-height: 12px;
       }
       .m-nickname {
         color: #409eff;
@@ -260,7 +265,10 @@ let removeUserInfo=()=>{
       .message-box {
         font-size: 20px;
         width: 100%;
-        span {
+        .avatar{
+          margin-right:5px;
+        }
+        .content-msg {
           border-radius: 5px;
           background: #eee;
           padding: 5px 10px;
