@@ -173,6 +173,7 @@ let removeUserInfo=()=>{
         >
           <span v-if="item.type === 1">
             <p class="join-tips">{{ item.msg }}</p>
+            <p class="join-tips">{{ item.date }}</p>
           </span>
           <span v-else>
             <p class="message-date">
@@ -250,6 +251,8 @@ let removeUserInfo=()=>{
       .join-tips {
         text-align: center;
         color: #ccc;
+        font-size:12px;
+        line-height:12px;
       }
       .m-nickname {
         color: #409eff;

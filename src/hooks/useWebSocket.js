@@ -10,7 +10,8 @@ export function useWebSocket(messageList,users, message) {
   socket.value.addEventListener("message", function (e) {
     let data = JSON.parse(e.data);
     users.value = data.users;
-    messageList.value.push(data);
+    //messageList.value.push(data);
+    messageList.value=data.chatMessage
   });
   //useOnMessage(socket,refValue)
   socket.value.onerror = (error) => {

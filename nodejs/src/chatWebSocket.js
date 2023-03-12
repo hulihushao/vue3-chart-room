@@ -72,8 +72,8 @@ function chatWebSocketServer() {
             users,
             bridge: obj.bridge,
           }
-          broadcast({...m,chatMessage});
           chatMessage.push(m)
+          broadcast({...m,chatMessage});
           break;
         case 2:
         let n={
@@ -85,8 +85,8 @@ function chatWebSocketServer() {
             users,
             bridge: obj.bridge,
           }
-          broadcast({...n,chatMessage});
           chatMessage.push(n)
+          broadcast({...n,chatMessage});
           break;
       }
     });
