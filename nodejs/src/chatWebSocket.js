@@ -10,6 +10,7 @@ function chatWebSocketServer() {
     uid: 2,
   }];
   let conns = {};
+  let chatMessage=[]
   const server = new WebSocket.Server({ port: 8081 });
   console.log("chatWebSocket创建成功");
   server.on("open", function open() {
@@ -62,7 +63,7 @@ function chatWebSocketServer() {
             });
           }
           console.log(isSelf, obj.uid, users, "所有用户");
-          broadcast({
+          let m={
             type: 1,
             nickname: obj.nickname,
             uid: obj.uid,
@@ -70,10 +71,12 @@ function chatWebSocketServer() {
             date: obj.date,
             users,
             bridge: obj.bridge,
-          });
+          }
+          broadcast({...m,chatMessage});
+          chatMessage.push(m)
           break;
         case 2:
-          broadcast({
+        let n={
             type: 2,
             nickname: obj.nickname,
             uid: obj.uid,
@@ -81,7 +84,9 @@ function chatWebSocketServer() {
             date: obj.date,
             users,
             bridge: obj.bridge,
-          });
+          }
+          broadcast({...n,chatMessage});
+          chatMessage.push(n)
           break;
       }
     });

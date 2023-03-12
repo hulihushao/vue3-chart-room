@@ -136,6 +136,7 @@ let submit=()=>{
       msg: textarea.value,
       bridge: bridge.value,
     })
+    textarea.value=""
 }
 let removeUserInfo=()=>{
   localStorage.removeItem("userInfo")
