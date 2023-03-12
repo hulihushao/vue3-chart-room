@@ -4,12 +4,12 @@ export function useWebSocket(refValue,user) {
     let socket=ref(null)
   socket.value = new WebSocket("ws://192.168.241.2:8081");
   socket.value.addEventListener("open", function () {
-    alert( "连接服务器成功")
+    ElMessage.success( "连接服务器成功")
     useSend(socket,user)
   });
   useOnMessage(socket,refValue)
   socket.value.onerror = (error) => {
-    
+    ElMessage.error("服务连接失败！请联系管理员")
   };
   socket.value.onclose = () => {
     ElMessage.error("连接已关闭")
