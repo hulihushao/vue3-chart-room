@@ -1,25 +1,18 @@
 <script setup lang="ts">
 import moment from "moment";
-import { ref, onMounted ,computed} from "vue";
+import { ref, watchEffect, reactive, onMounted, computed } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import {useWebSocket,useOnMessage} from "../hooks/useWebSocket.js"
-let menuList = ref<object[]>([
-  {
-    nickname: "群一",
-    usertype: 1,
-  },
-  {
-    nickname: "用户一",
-    usertype: 2,
-    uid: 2,
-  },
-]);
+import { useWebSocket, useSend, useOnMessage } from "../hooks/useWebSocket.js";
+let menuList = ref<object[]>([]);
+
 let textarea = ref("");
 let chatType = ref(0);
 let bridge = ref([]);
 let uid = ref(1);
-let msg=ref("")
+let users = ref([]);
 let title = ref("");
+let WebSocket = ref(null);
+let userInfo={}
 //let currentMessage = ref([]);
 let messageList = ref([
   {
@@ -57,6 +50,7 @@ interface messageItem {
 }
 let clickMenu = (value: messageItem) => {
   if (!value.usertype) return;
+
   chatType.value = value.usertype;
   title.value = value.nickname;
   if (value.usertype == 1) {
@@ -69,45 +63,84 @@ let clickMenu = (value: messageItem) => {
   );*/
 };
 
-let currentMessage=computed(()=>{
+let currentMessage = computed(() => {
   return messageList.value.filter(
     (item) => item.bridge.sort().join("") == bridge.value.sort().join("")
-  )
-})
+  );
+});
+let usersList = computed(() => {
+  if(!menuList.value.length)return users.value
+  let index =users.value.findIndex(item=>item.nickname+"(YOU)"==menuList.value[0].nickname)
+  users.value.splice(index,1)
+  users.value.unshift(menuList.value[0]);
+  return users.value
+});
 onMounted(() => {
-  let u=localStorage.getItem("userInfo")
-  if(u){
+  let u = localStorage.getItem("userInfo");
+  if (u) {
+    userInfo=JSON.parse(u)
+    uid.value=userInfo.uid
     menuList.value.unshift({
-      nickname:JSON.parse(u).nickname+"(YOU)"
-    })
-    let WebSocket=useWebSocket(messageList,{...JSON.parse(u),type:1,date:moment().format("YYYY-MM-DD HH:mm:ss")})
-    return
+      nickname: JSON.parse(u).nickname + "(YOU)",
+    });
+    WebSocket.value = useWebSocket(messageList, users, {
+      ...JSON.parse(u),
+      type: 1,
+      date: moment().format("YYYY-MM-DD HH:mm:ss"),
+      users: users.value,
+      msg: textarea.value,
+      bridge: bridge.value,
+    });
+    return;
   }
   ElMessageBox.prompt("请输入昵称", "提示", {
     confirmButtonText: "确定",
     showCancelButton: false,
-    closeOnClickModal:false,
+    closeOnClickModal: false,
     inputValidator: (value) => {
       let some = menuList.value.some((item) => item.nickname == value);
-if(!value) return "请输入昵称!"
+      if (!value) return "请输入昵称!";
       if (some) return "昵称已存在!";
     },
   }).then(({ value }) => {
-    let user={
-      uid:menuList.value.length+1,
-      nickname:value,
-      usertype:2
-    }
-    localStorage.setItem("userInfo",JSON.stringify(user))
+    let user = {
+      uid: menuList.value.length + "1"+Math.random()*100000,
+      nickname: value,
+      usertype: 2,
+    };
+        uid.value=user.uid
+    localStorage.setItem("userInfo", JSON.stringify(user));
     menuList.value.unshift({
-      nickname:value+"(YOU)"
-    })
+      nickname: value + "(YOU)",
+    });
+    WebSocket.value = useWebSocket(messageList, users, {
+      ...user,
+      type: 1,
+      date: moment().format("YYYY-MM-DD HH:mm:ss"),
+      users: users.value,
+      msg: textarea.value,
+      bridge: bridge.value,
+    });
     ElMessage({
       type: "success",
       message: `用户创建成功!`,
     });
   });
 });
+let submit=()=>{
+  useSend(WebSocket,{
+      ...userInfo,
+      type: 2,
+      date: moment().format("YYYY-MM-DD HH:mm:ss"),
+      users: users.value,
+      msg: textarea.value,
+      bridge: bridge.value,
+    })
+}
+let removeUserInfo=()=>{
+  localStorage.removeItem("userInfo")
+  location.reload()
+}
 </script>
 
 <template>
@@ -115,13 +148,14 @@ if(!value) return "请输入昵称!"
     <aside class="menu">
       <h3>聊天列表</h3>
       <p
-        v-for="item in menuList"
+        v-for="item in usersList"
         :key="item.nickname"
         @click="clickMenu(item)"
-        :class="{ active: chatType == item.usertype }"
+        :class="{ active: bridge[1] == item.uid&&chatType==item.usertype }"
       >
         {{ item.nickname }}
       </p>
+      <button @click="removeUserInfo">清除用户信息</button>
     </aside>
     <main class="main-body" v-if="chatType == 0">
       <p class="no-chat">暂无内容</p>
@@ -161,7 +195,7 @@ if(!value) return "请输入昵称!"
           rows="3"
           placeholder="请输入内容"
         />
-        <el-button type="primary">发送</el-button>
+        <el-button type="primary" @click="submit">发送</el-button>
       </footer>
     </main>
   </div>
