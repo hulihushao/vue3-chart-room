@@ -13,7 +13,7 @@ let users = ref([]);
 let title = ref("");
 let WebSocket = ref(null);
 let userInfo = {};
-//let currentMessage = ref([]);
+//测试message用例
 let messageList = ref([
   {
     type: 1,
@@ -48,6 +48,7 @@ interface messageItem {
   uid: number;
   nickname: string;
 }
+//菜单列表点击
 let clickMenu = (value: messageItem) => {
   if (!value.usertype) return;
 
@@ -106,7 +107,7 @@ onMounted(() => {
     },
   }).then(({ value }) => {
     let user = {
-      uid: menuList.value.length + "1" + Math.random() * 100000,
+      uid: menuList.value.length + Math.random() * 1000,
       nickname: value,
       usertype: 2,
     };
@@ -179,14 +180,21 @@ let removeUserInfo = () => {
           </span>
           <span v-else>
             <p class="message-date">
-              <span class="m-nickname">{{ item.nickname }}</span>
+              <!--   <span class="m-nickname">{{ item.nickname }}</span>-->
               {{ item.date }}
             </p>
             <div class="message-box">
-              <span class="avatar" v-if="item.uid !=uid"
-                ><el-avatar> {{ item.nickname }} </el-avatar></span
+              <span class="avatar" v-if="item.uid != uid"
+                ><el-avatar style="margin-right:5px"> {{ item.nickname }} </el-avatar>
+                <span
+                class="content-msg"  
+                :style="{ background: item.uid == uid ? '#79D289' : '#eee' }"
+                >{{ item.msg }}</span
               >
-              <span class="content-msg"
+                </span
+              >
+              <span
+                class="content-msg" v-if="item.uid == uid"
                 :style="{ background: item.uid == uid ? '#79D289' : '#eee' }"
                 >{{ item.msg }}</span
               >
@@ -250,6 +258,7 @@ let removeUserInfo = () => {
     .text-body {
       flex: 1;
       padding: 0 5px;
+      overflow: auto;
       .user {
         text-align: right;
       }
@@ -265,13 +274,17 @@ let removeUserInfo = () => {
       .message-box {
         font-size: 20px;
         width: 100%;
-        .avatar{
-          margin-right:5px;
+        .avatar {
+          margin-right: 5px;
+          display:flex;
+         align-items:center; 
         }
         .content-msg {
+          display:inline-block;
+          max-width:80%;
           border-radius: 5px;
           background: #eee;
-          padding: 5px 10px;
+          padding: 2px 10px;
         }
       }
     }

@@ -1,16 +1,44 @@
 function chatWebSocketServer() {
   const WebSocket = require("ws");
   let users = [{
-    nickname: "群一",
+    nickname: "测试群聊",
     usertype: 1,
   },
   {
-    nickname: "用户一",
+    nickname: "测试用户",
     usertype: 2,
-    uid: 2,
+    uid: 1,
   }];
   let conns = {};
-  let chatMessage=[]
+  let chatMessage=[
+
+  {
+    type: 1,
+    name: "qq",
+    msg: "测试用户进入聊天室",
+    date: "2020-04-05 12:00:00",
+    nickname: "测试用户",
+    bridge: [],
+  },
+  {
+    uid: 1,
+    type: 2,
+    name: "qq",
+    msg: "测试测试",
+    date: "2023-03-13 04:22:00",
+    nickname: "测试用户",
+    bridge: ["0179736.08504656787",1],
+  },
+  {
+    uid: "0179736.08504656787",
+    type: 2,
+    name: "qq",
+    msg: "测试测试222",
+    date: "2023-05-25 13:00:05",
+    nickname: "CS",
+    bridge: [ "0179736.08504656787",1],
+  },
+]
   const server = new WebSocket.Server({ port: 8081 });
   console.log("chatWebSocket创建成功");
   server.on("open", function open() {
