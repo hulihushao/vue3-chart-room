@@ -96,12 +96,17 @@ onMounted(() => {
     });
     return;
   }
+  
+  WebSocket.value = useWebSocket(messageList, users, {
+      type: 3,
+    })
+  
   ElMessageBox.prompt("请输入昵称", "提示", {
     confirmButtonText: "确定",
     showCancelButton: false,
     closeOnClickModal: false,
     inputValidator: (value) => {
-      let some = menuList.value.some((item) => item.nickname == value);
+      let some = users.value.some((item) => item.nickname == value);
       if (!value) return "请输入昵称!";
       if (some) return "昵称已存在!";
     },
@@ -142,6 +147,11 @@ let submit = () => {
   textarea.value = "";
 };
 let removeUserInfo = () => {
+  useSend(WebSocket,{
+    type:4,
+    ...userInfo,
+    date: moment().format("YYYY-MM-DD HH:mm:ss"),
+  })
   localStorage.removeItem("userInfo");
   location.reload();
 };
