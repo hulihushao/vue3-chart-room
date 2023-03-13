@@ -174,7 +174,7 @@ let removeUserInfo = () => {
           v-for="item in currentMessage"
           :key="item.date"
         >
-          <span v-if="item.type === 1">
+          <span v-if="item.type === 1" style="margin:5px 0">
             <p class="join-tips">{{ item.msg }}</p>
             <p class="join-tips">{{ item.date }}</p>
           </span>
