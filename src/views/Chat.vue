@@ -8,7 +8,7 @@ let menuList = ref<object[]>([]);
 let textarea = ref("");
 let chatType = ref(0);
 let bridge = ref([]);
-let uid = ref<number|string>(1);
+let uid = ref<number | string>(1);
 let users = ref([]);
 let title = ref("");
 let WebSocket = ref(null);
@@ -96,11 +96,11 @@ onMounted(() => {
     });
     return;
   }
-  
+
   WebSocket.value = useWebSocket(messageList, users, {
-      type: 3,
-    })
-  
+    type: 3,
+  });
+
   ElMessageBox.prompt("请输入昵称", "提示", {
     confirmButtonText: "确定",
     showCancelButton: false,
@@ -147,13 +147,23 @@ let submit = () => {
   textarea.value = "";
 };
 let removeUserInfo = () => {
-  useSend(WebSocket,{
-    type:4,
+  useSend(WebSocket, {
+    type: 4,
     ...userInfo,
     date: moment().format("YYYY-MM-DD HH:mm:ss"),
-  })
+  });
   localStorage.removeItem("userInfo");
   location.reload();
+};
+let reLink = () => {
+  WebSocket.value = useWebSocket(messageList, users, {
+    ...userInfo,
+    type: 1,
+    date: moment().format("YYYY-MM-DD HH:mm:ss"),
+    users: users.value,
+    msg: "",
+    bridge: [],
+  });
 };
 </script>
 
@@ -169,7 +179,10 @@ let removeUserInfo = () => {
       >
         {{ item.nickname }}
       </p>
-      <button @click="removeUserInfo">清除用户信息</button>
+      <div class="btncon">
+        <button class="btn" @click="removeUserInfo">清除用户信息</button>
+        <button class="btn" @click="reLink">重置连接</button>
+      </div>
     </aside>
     <main class="main-body" v-if="chatType == 0">
       <p class="no-chat">暂无内容</p>
@@ -184,7 +197,7 @@ let removeUserInfo = () => {
           v-for="item in currentMessage"
           :key="item.date"
         >
-          <span v-if="item.type === 1" style="margin:5px 0">
+          <span v-if="item.type === 1" style="margin: 5px 0">
             <p class="join-tips">{{ item.msg }}</p>
             <p class="join-tips">{{ item.date }}</p>
           </span>
@@ -195,16 +208,18 @@ let removeUserInfo = () => {
             </p>
             <div class="message-box">
               <span class="avatar" v-if="item.uid != uid"
-                ><el-avatar style="margin-right:5px"> {{ item.nickname }} </el-avatar>
+                ><el-avatar style="margin-right: 5px">
+                  {{ item.nickname }}
+                </el-avatar>
                 <span
-                class="content-msg"  
-                :style="{ background: item.uid == uid ? '#79D289' : '#eee' }"
-                >{{ item.msg }}</span
-              >
-                </span
-              >
+                  class="content-msg"
+                  :style="{ background: item.uid == uid ? '#79D289' : '#eee' }"
+                  >{{ item.msg }}</span
+                >
+              </span>
               <span
-                class="content-msg" v-if="item.uid == uid"
+                class="content-msg"
+                v-if="item.uid == uid"
                 :style="{ background: item.uid == uid ? '#79D289' : '#eee' }"
                 >{{ item.msg }}</span
               >
@@ -250,6 +265,15 @@ let removeUserInfo = () => {
       border-bottom: 1px solid #ccc;
       padding: 2px 5px;
     }
+    .btncon {
+      display: flex;
+      flex-wrap:wrap;
+      justify-content: center;
+      overflow:hidden;
+      .btn {
+        margin-top: 10px;
+      }
+    }
   }
   .main-body {
     flex: 1;
@@ -286,12 +310,12 @@ let removeUserInfo = () => {
         width: 100%;
         .avatar {
           margin-right: 5px;
-          display:flex;
-         align-items:center; 
+          display: flex;
+          align-items: center;
         }
         .content-msg {
-          display:inline-block;
-          max-width:80%;
+          display: inline-block;
+          max-width: 80%;
           border-radius: 5px;
           background: #eee;
           padding: 2px 10px;
