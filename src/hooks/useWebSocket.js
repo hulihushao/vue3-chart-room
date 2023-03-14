@@ -17,6 +17,7 @@ export function useWebSocket(messageList,users, message,callback) {
   //useOnMessage(socket,refValue)
   socket.value.onerror = (error) => {
     ElMessage.error("服务连接失败！请联系管理员");
+    if(typeof callback=="function")callback()
   };
   socket.value.onclose = () => {
     ElMessage.error("连接已关闭");

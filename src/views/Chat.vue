@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import moment from "moment";
 import { ref, watchEffect, reactive, onMounted, computed } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox, ElLoading } from "element-plus";
 import { useWebSocket, useSend, useOnMessage } from "../hooks/useWebSocket.js";
 let menuList = ref<object[]>([]);
 
@@ -13,7 +13,7 @@ let users = ref([]);
 let title = ref("");
 let WebSocket = ref(null);
 let userInfo = {};
-let fullscreenLoading=ref(false)
+let fullscreenLoading = ref(false);
 //测试message用例
 let messageList = ref([
   {
@@ -176,17 +176,26 @@ let removeUserInfo = () => {
   location.reload();
 };
 let reLink = () => {
-  fullscreenLoading.value=true
-  WebSocket.value = useWebSocket(messageList, users, {
-    ...userInfo,
-    type: 1,
-    date: moment().format("YYYY-MM-DD HH:mm:ss"),
-    users: users.value,
-    msg: "",
-    bridge: [],
-  },()=>{
-    fullscreenLoading.value=false
+  const loading = ElLoading.service({
+    lock: true,
+    text: "连接中...",
+    background: "rgba(0, 0, 0, 0.7)",
   });
+  WebSocket.value = useWebSocket(
+    messageList,
+    users,
+    {
+      ...userInfo,
+      type: 1,
+      date: moment().format("YYYY-MM-DD HH:mm:ss"),
+      users: users.value,
+      msg: "",
+      bridge: [],
+    },
+    () => {
+      loading.close();
+    }
+  );
 };
 </script>
 
@@ -206,8 +215,16 @@ let reLink = () => {
         }}</span>
       </p>
       <div class="btncon">
-        <el-button size="mini" class="btn" @click="removeUserInfo">清除用户信息</el-button>
-        <el-button v-loading.fullscreen.lock="fullscreenLoading" size="mini"  class="btn" @click="reLink">重置连接</el-button>
+        <el-button size="mini" class="btn" @click="removeUserInfo"
+          >清除用户信息</el-button
+        >
+        <el-button
+          v-loading.fullscreen.lock="fullscreenLoading"
+          size="mini"
+          class="btn"
+          @click="reLink"
+          >重置连接</el-button
+        >
       </div>
     </aside>
     <main class="main-body" v-if="chatType == 0">
