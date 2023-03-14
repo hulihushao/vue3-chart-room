@@ -15,7 +15,6 @@
       >chat聊天室</router-link
     >
   </div>
-  
   <router-view />
 </template>
 
