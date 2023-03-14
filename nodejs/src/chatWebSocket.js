@@ -28,16 +28,16 @@ function chatWebSocketServer() {
       msg: "测试测试",
       date: "2023-03-13 04:22:00",
       nickname: "测试用户",
-      bridge: ["0179736.08504656787", 1],
+      bridge: [927.9948525160704, 1],
     },
     {
-      uid: "0179736.08504656787",
+      uid: "927.9948525160704",
       type: 2,
       name: "qq",
       msg: "测试测试222",
       date: "2023-05-25 13:00:05",
-      nickname: "CS",
-      bridge: ["0179736.08504656787", 1],
+      nickname: "CSYL",
+      bridge: [927.9948525160704, 1],
     },
   ];
   const server = new WebSocket.Server({ port: 8081 });
@@ -113,6 +113,7 @@ function chatWebSocketServer() {
             date: obj.date,
             users,
             bridge: obj.bridge,
+            status: 1 // 表示未读
           };
           chatMessage.push(n);
           broadcast({ ...n, chatMessage });
