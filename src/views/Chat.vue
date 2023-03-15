@@ -232,7 +232,7 @@ let reLink = () => {
           style="margin: 5px 0"
           :class="{ user: item.uid == uid }"
           v-for="item in currentMessage"
-          :key="item.date"
+          :key="item.date" v-scrollBottom
         >
           <span v-if="item.type === 1" style="margin: 5px 0">
             <p class="join-tips">{{ item.msg }}</p>

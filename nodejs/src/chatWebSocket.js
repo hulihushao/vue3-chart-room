@@ -41,6 +41,69 @@ function chatWebSocketServer() {
       bridge: [327.0110048992845, 1],
       status:1
     },
+    {
+
+      uid: 1,
+      type: 2,
+      name: "qq",
+      msg: "测试测试",
+      date: "2023-03-13 04:22:00",
+      nickname: "测试用户",
+      bridge: [327.0110048992845, 1],
+      status:1
+    },
+    {
+      uid: "327.0110048992845",
+      type: 2,
+      name: "qq",
+      msg: "测试测试222",
+      date: "2023-05-25 13:00:05",
+      nickname: "CSYL",
+      bridge: [327.0110048992845, 1],
+      status:1
+    },
+    {
+
+      uid: 1,
+      type: 2,
+      name: "qq",
+      msg: "测试测试",
+      date: "2023-03-13 04:22:00",
+      nickname: "测试用户",
+      bridge: [327.0110048992845, 1],
+      status:1
+    },
+    {
+      uid: "327.0110048992845",
+      type: 2,
+      name: "qq",
+      msg: "测试测试222",
+      date: "2023-05-25 13:00:05",
+      nickname: "CSYL",
+      bridge: [327.0110048992845, 1],
+      status:1
+    },
+    {
+
+      uid: 1,
+      type: 2,
+      name: "qq",
+      msg: "测试测试",
+      date: "2023-03-13 04:22:00",
+      nickname: "测试用户",
+      bridge: [327.0110048992845, 1],
+      status:1
+    },
+    {
+      uid: "327.0110048992845",
+      type: 2,
+      name: "qq",
+      msg: "测试测试222",
+      date: "2023-05-25 13:00:05",
+      nickname: "CSYL",
+      bridge: [327.0110048992845, 1],
+      status:1
+    },
   ];
   const server = new WebSocket.Server({ port: 8081 });
   console.log("chatWebSocket创建成功");
@@ -57,7 +120,7 @@ function chatWebSocketServer() {
     // 单聊
     if (message.bridge && message.bridge.length) {
       message.bridge.forEach((item) => {
-        conns[item].send(JSON.stringify(message));
+        conns[item]&&conns[item].send(JSON.stringify(message));
       });
       return;
     }
@@ -118,6 +181,19 @@ function chatWebSocketServer() {
             status: 1 // 表示未读
           };
           chatMessage.push(n);
+          let bridgeTo=obj.bridge.filter(item=>item!=obj.uid)
+          if(!conns[bridgeTo[0]]){
+            chatMessage.push({
+            type: 2,
+            nickname: users.filter(item=>item.uid==bridgeTo[0])[0].nickname,
+            uid: bridgeTo[0],
+            msg: obj.msg,
+            date: obj.date,
+            users,
+            bridge: obj.bridge,
+            status: 1 // 表示未读
+          })
+          }
           broadcast({ ...n, chatMessage });
           break;
         case 3:
