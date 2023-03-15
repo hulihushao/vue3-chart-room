@@ -29,21 +29,20 @@ function chatWebSocketServer() {
       date: "2023-03-13 04:22:00",
       nickname: "测试用户",
       bridge: [327.0110048992845, 1],
-      status:1,
-      statusUid:[]
+      status: 1,
+      statusUid: [],
     },
     {
       uid: "327.0110048992845",
-      type: 2,
+      type: 1,
       name: "qq",
       msg: "测试测试222",
       date: "2023-05-25 13:00:05",
       nickname: "CSYL",
       bridge: [327.0110048992845, 1],
-      status:1,
-      statusUid:[]
+      status: 1,
+      statusUid: [],
     },
-    
   ];
   const server = new WebSocket.Server({ port: 8081 });
   console.log("chatWebSocket创建成功");
@@ -60,12 +59,22 @@ function chatWebSocketServer() {
     // 单聊
     if (message.bridge && message.bridge.length) {
       message.bridge.forEach((item) => {
-        conns[item]&&conns[item].send(JSON.stringify(message));
+        conns[item] && conns[item].send(JSON.stringify(message));
       });
       return;
     }
     server.clients.forEach(function each(client) {
       if (client.readyState === WebSocket.OPEN) {
+        chatMessage.forEach(item=>{
+          if(!item.bridge||!item.bridge.length){
+            if(item.statusValue.indexOf(client.user.uid)>-1){
+              item.status=0
+            }else{
+              item.status=1
+            }
+          }
+        })
+        message.chatMessage=chatMessage
         client.send(JSON.stringify(message));
       }
     });
@@ -74,12 +83,13 @@ function chatWebSocketServer() {
     const ip = req.socket.remoteAddress;
     const port = req.socket.remotePort;
     const clientName = ip + ":" + port;
-
+    
     console.log("%s is connected ", clientName);
 
     ws.on("message", function incoming(message) {
       console.log("received: %s from %s", message, clientName);
       const obj = JSON.parse(message);
+      ws.user={uid:obj.uid}
       //1:进入聊天室，2:发送消息，3:获取用户列表，4:删除用户
       switch (obj.type) {
         case 1:
@@ -118,24 +128,29 @@ function chatWebSocketServer() {
             date: obj.date,
             users,
             bridge: obj.bridge,
-            status: 1 ,// 表示未读
-            statusUid:[]
+            status: 1, // 表示未读
+            statusUid: [],
           };
+          //处理群聊的消息未读数
+          
           chatMessage.push(n);
           //设置测试用户的消息回复
-          let bridgeTo=obj.bridge.filter(item=>item!=obj.uid)
-          if(!conns[bridgeTo[0]]){
+          let bridgeTo = obj.bridge.filter((item) => item != obj.uid);
+          if (!conns[bridgeTo[0]]) {
             chatMessage.push({
-            type: 2,
-            nickname: users.filter(item=>item.uid==bridgeTo[0])[0].nickname,
-            uid: bridgeTo[0],
-            msg: obj.msg,
-            date: obj.date,
-            users,
-            bridge: obj.bridge,
-            status: 1 // 表示未读
-          })
+              type: 2,
+              nickname: users.filter((item) => item.uid == bridgeTo[0])[0]
+                .nickname,
+              uid: bridgeTo[0],
+              msg: obj.msg,
+              date: obj.date,
+              users,
+              bridge: obj.bridge,
+              status: 1, // 表示未读
+              statusUid: [],
+            });
           }
+          
           broadcast({ ...n, chatMessage });
           break;
         case 3:
@@ -164,14 +179,19 @@ function chatWebSocketServer() {
           broadcast({ ...x, chatMessage });
           break;
         case 5:
-          let messages=obj.messages
-          chatMessage.forEach(item=>{
-            let f=messages.filter(itm=>itm.msg==item.msg&&itm.date==item.date&&itm.uid==item.uid)
-            if(f.length){
-              item.status=0
-              item.statusUid.push(obj.uid)
+          let messages = obj.messages;
+          chatMessage.forEach((item) => {
+            let f = messages.filter(
+              (itm) =>
+                itm.msg == item.msg &&
+                itm.date == item.date &&
+                itm.uid == item.uid
+            );
+            if (f.length) {
+              item.status = 0;
+              item.statusUid.push(obj.uid);
             }
-          })
+          });
           break;
       }
     });
