@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import moment from "moment";
-import { ref, watchEffect, reactive, onMounted, computed } from "vue";
+import { ref,nextTick, watchEffect, reactive, onMounted, computed } from "vue";
 import { ElMessage, ElMessageBox, ElLoading } from "element-plus";
 import { useWebSocket, useSend, useOnMessage } from "../hooks/useWebSocket.js";
 let menuList = ref<object[]>([]);
@@ -48,6 +48,7 @@ interface messageItem {
   uid: number;
   nickname: string;
 }
+let msgbox=ref()
 //菜单列表点击
 let clickMenu = (value: messageItem) => {
   if (!value.usertype) return;
@@ -59,9 +60,9 @@ let clickMenu = (value: messageItem) => {
   } else if (value.usertype == 2) {
     bridge.value = [uid.value, value.uid];
   }
-  /**currentMessage.value = messageList.value.filter(
-    (item) => item.bridge.sort().join("") == bridge.value.sort().join("")
-  );*/
+  nextTick(()=>{
+    msgbox.value.scrollTo({top:10000})
+  })
 };
 //获取消息未读数量，有user表示是单聊，没有表示群聊
 let getMsgNum = (user: messageItem) => {
@@ -227,12 +228,12 @@ let reLink = () => {
     <main class="main-body" v-else>
       <p class="title">{{ title }}</p>
       <div style="border-bottom: 1px solid #ccc" />
-      <div class="text-body">
+      <div class="text-body" ref="msgbox">
         <div
           style="margin: 5px 0"
           :class="{ user: item.uid == uid }"
           v-for="item in currentMessage"
-          :key="item.date" v-scrollBottom
+          :key="item.date"
         >
           <span v-if="item.type === 1" style="margin: 5px 0">
             <p class="join-tips">{{ item.msg }}</p>
@@ -243,7 +244,7 @@ let reLink = () => {
               <!--   <span class="m-nickname">{{ item.nickname }}</span>-->
               {{ item.date }}
             </p>
-            <div class="message-box">
+            <div class="message-box" >
               <span class="avatar" v-if="item.uid != uid"
                 ><el-avatar style="margin-right: 5px">
                   {{ item.nickname }}
