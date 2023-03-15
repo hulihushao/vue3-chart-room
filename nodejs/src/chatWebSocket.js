@@ -41,69 +41,7 @@ function chatWebSocketServer() {
       bridge: [327.0110048992845, 1],
       status:1
     },
-    {
-
-      uid: 1,
-      type: 2,
-      name: "qq",
-      msg: "测试测试",
-      date: "2023-03-13 04:22:00",
-      nickname: "测试用户",
-      bridge: [327.0110048992845, 1],
-      status:1
-    },
-    {
-      uid: "327.0110048992845",
-      type: 2,
-      name: "qq",
-      msg: "测试测试222",
-      date: "2023-05-25 13:00:05",
-      nickname: "CSYL",
-      bridge: [327.0110048992845, 1],
-      status:1
-    },
-    {
-
-      uid: 1,
-      type: 2,
-      name: "qq",
-      msg: "测试测试",
-      date: "2023-03-13 04:22:00",
-      nickname: "测试用户",
-      bridge: [327.0110048992845, 1],
-      status:1
-    },
-    {
-      uid: "327.0110048992845",
-      type: 2,
-      name: "qq",
-      msg: "测试测试222",
-      date: "2023-05-25 13:00:05",
-      nickname: "CSYL",
-      bridge: [327.0110048992845, 1],
-      status:1
-    },
-    {
-
-      uid: 1,
-      type: 2,
-      name: "qq",
-      msg: "测试测试",
-      date: "2023-03-13 04:22:00",
-      nickname: "测试用户",
-      bridge: [327.0110048992845, 1],
-      status:1
-    },
-    {
-      uid: "327.0110048992845",
-      type: 2,
-      name: "qq",
-      msg: "测试测试222",
-      date: "2023-05-25 13:00:05",
-      nickname: "CSYL",
-      bridge: [327.0110048992845, 1],
-      status:1
-    },
+    
   ];
   const server = new WebSocket.Server({ port: 8081 });
   console.log("chatWebSocket创建成功");
