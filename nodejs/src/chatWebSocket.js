@@ -29,7 +29,8 @@ function chatWebSocketServer() {
       date: "2023-03-13 04:22:00",
       nickname: "测试用户",
       bridge: [327.0110048992845, 1],
-      status:1
+      status:1,
+      statusUid:[]
     },
     {
       uid: "327.0110048992845",
@@ -39,7 +40,8 @@ function chatWebSocketServer() {
       date: "2023-05-25 13:00:05",
       nickname: "CSYL",
       bridge: [327.0110048992845, 1],
-      status:1
+      status:1,
+      statusUid:[]
     },
     
   ];
@@ -116,9 +118,11 @@ function chatWebSocketServer() {
             date: obj.date,
             users,
             bridge: obj.bridge,
-            status: 1 // 表示未读
+            status: 1 ,// 表示未读
+            statusUid:[]
           };
           chatMessage.push(n);
+          //设置测试用户的消息回复
           let bridgeTo=obj.bridge.filter(item=>item!=obj.uid)
           if(!conns[bridgeTo[0]]){
             chatMessage.push({
@@ -165,6 +169,7 @@ function chatWebSocketServer() {
             let f=messages.filter(itm=>itm.msg==item.msg&&itm.date==item.date&&itm.uid==item.uid)
             if(f.length){
               item.status=0
+              item.statusUid.push(obj.uid)
             }
           })
           break;
