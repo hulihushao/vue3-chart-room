@@ -159,6 +159,15 @@ function chatWebSocketServer() {
           chatMessage.push(x);
           broadcast({ ...x, chatMessage });
           break;
+        case 5:
+          let messages=obj.messages
+          chatMessage.forEach(item=>{
+            let f=messages.filter(itm=>itm.msg==item.msg&&itm.date==item.date&&itm.uid==item.uid)
+            if(f.length){
+              item.status=0
+            }
+          })
+          break;
       }
     });
   });

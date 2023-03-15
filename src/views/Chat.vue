@@ -13,6 +13,7 @@ let users = ref([]);
 let title = ref("");
 let WebSocket = ref(null);
 let userInfo = {};
+let cMessage=ref([])
 //测试message用例
 let messageList = ref([
   {
@@ -60,9 +61,17 @@ let clickMenu = (value: messageItem) => {
   } else if (value.usertype == 2) {
     bridge.value = [uid.value, value.uid];
   }
+  
   nextTick(()=>{
+    useSend(WebSocket,{
+    type:5,
+    ...userInfo,
+    messages:cMessage.value,
+    date: moment().format("YYYY-MM-DD HH:mm:ss"),
+  })
     msgbox.value.scrollTo({top:10000})
   })
+  
 };
 //获取消息未读数量，有user表示是单聊，没有表示群聊
 let getMsgNum = (user: messageItem) => {
@@ -87,6 +96,7 @@ let currentMessage = computed(() => {
   data.forEach((item) => {
     item.status = 0;
   });
+  cMessage.value=data
   return data;
 });
 let usersList = computed(() => {
