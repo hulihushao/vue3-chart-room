@@ -13,7 +13,6 @@ let users = ref([]);
 let title = ref("");
 let WebSocket = ref(null);
 let userInfo = {};
-let fullscreenLoading = ref(false);
 //测试message用例
 let messageList = ref([
   {
@@ -69,12 +68,12 @@ let getMsgNum = (user: messageItem) => {
   if (!user) {
     // 群聊，brige为空数组，找未读消息数
     return messageList.value.filter((item) => {
-      return !item.brige.length && item.status === 1;
+      return !item.bridge.length && item.status === 1;
     }).length;
   } else {
     // 增加了uid相同判断，确认是当前聊天对应人的消息数组
     return messageList.value.filter((m) => {
-      return m.brige.length && m.status === 1 && m.uid === user.uid;
+      return m.bridge.length && m.status == 1 && m.uid == user.uid;
     }).length;
   }
 };
@@ -209,22 +208,17 @@ let reLink = () => {
         @click="clickMenu(item)"
         :class="{ active: bridge[1] == item.uid && chatType == item.usertype }"
       >
-        <span> {{ item.nickname }}</span>
+        <span class="nickname-item"> {{ item.nickname }}</span>
         <span class="msgtip" v-show="getMsgNum(item)">{{
           getMsgNum(item)
         }}</span>
+        <span v-show="!getMsgNum(item)"></span>
       </p>
       <div class="btncon">
         <el-button size="mini" class="btn" @click="removeUserInfo"
           >清除用户信息</el-button
         >
-        <el-button
-          v-loading.fullscreen.lock="fullscreenLoading"
-          size="mini"
-          class="btn"
-          @click="reLink"
-          >重置连接</el-button
-        >
+        <el-button size="mini" class="btn" @click="reLink">重置连接</el-button>
       </div>
     </aside>
     <main class="main-body" v-if="chatType == 0">
@@ -300,13 +294,29 @@ let reLink = () => {
       color: #fff;
     }
     h3 {
+      width: 100%;
       text-align: center;
       border-bottom: 1px solid #ccc;
     }
+
+    .msgtip {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #409eff;
+      color: #fff;
+      line-height: 20px;
+      text-align: center;
+    }
     p {
+      width: 100%;
       line-height: 25px;
       border-bottom: 1px solid #ccc;
       padding: 2px 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .btncon {
       display: flex;
