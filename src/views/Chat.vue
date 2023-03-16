@@ -92,7 +92,7 @@ watch(()=>messageList.value.length,()=>{
 })
 //获取消息未读数量，有user表示是单聊，没有表示群聊
 let getMsgNum = (user: messageItem) => {
-  if (!user) {
+  if (user.usertype==1) {
     // 群聊，brige为空数组，找未读消息数
     return messageList.value.filter((item) => {
       return !item.bridge.length && item.status === 1;

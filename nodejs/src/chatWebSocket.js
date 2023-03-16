@@ -136,7 +136,7 @@ function chatWebSocketServer() {
           chatMessage.push(n);
           //设置测试用户的消息回复
           let bridgeTo = obj.bridge.filter((item) => item != obj.uid);
-          if (!conns[bridgeTo[0]]) {
+          if (bridgeTo.length&&!conns[bridgeTo[0]]) {
             chatMessage.push({
               type: 2,
               nickname: users.filter((item) => item.uid == bridgeTo[0])[0]
@@ -168,9 +168,9 @@ function chatWebSocketServer() {
           let del = users.splice(index, 1);
           let x = {
             type: 1,
-            nickname: del.nickname,
-            uid: del.uid,
-            msg: `${del.nickname}离开了聊天室`,
+            nickname: del[0].nickname,
+            uid: del[0].uid,
+            msg: `${del[0].nickname}离开了聊天室`,
             date: obj.date,
             users,
             bridge: [],
