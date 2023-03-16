@@ -24,7 +24,6 @@ function chatWebSocketServer() {
     {
       uid: 1,
       type: 2,
-      name: "qq",
       msg: "测试测试",
       date: "2023-03-13 04:22:00",
       nickname: "测试用户",
@@ -34,8 +33,7 @@ function chatWebSocketServer() {
     },
     {
       uid: "567.9477892625016",
-      type: 1,
-      name: "qq",
+      type: 2,
       msg: "测试测试222",
       date: "2023-05-25 13:00:05",
       nickname: "CSYL",
@@ -147,7 +145,7 @@ function chatWebSocketServer() {
               date: obj.date,
               users,
               bridge: obj.bridge,
-              status: 1, // 表示未读
+              status: 0, // 表示未读
               statusUid: [],
             });
           }

@@ -165,15 +165,26 @@ onMounted(() => {
     });
   });
 });
+interface sendMessage{
+  type:number,
+  date:string,
+  users:object[],
+  msg:string,
+  bridge:number|string[],
+
+}
 let submit = () => {
-  useSend(WebSocket, {
+  let sendMsg:sendMessage={
     ...userInfo,
     type: 2,
     date: moment().format("YYYY-MM-DD HH:mm:ss"),
     users: users.value,
     msg: textarea.value,
     bridge: bridge.value,
-  });
+
+  }
+  messageList.value.push(sendMsg)
+  useSend(WebSocket, sendMsg);
   textarea.value = "";
 };
 let removeUserInfo = () => {
@@ -229,7 +240,7 @@ let reLink = () => {
         <el-popconfirm
           confirm-button-text="确定"
           cancel-button-text="取消"
-          title="Are you sure to delete this?"
+          title="确定删除用户数据吗？"
           @confirm="removeUserInfo"
         >
           <template #reference>
