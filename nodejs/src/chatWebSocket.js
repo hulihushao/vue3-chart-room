@@ -28,18 +28,18 @@ function chatWebSocketServer() {
       msg: "测试测试",
       date: "2023-03-13 04:22:00",
       nickname: "测试用户",
-      bridge: [327.0110048992845, 1],
+      bridge: [567.9477892625016, 1],
       status: 1,
       statusUid: [],
     },
     {
-      uid: "327.0110048992845",
+      uid: "567.9477892625016",
       type: 1,
       name: "qq",
       msg: "测试测试222",
       date: "2023-05-25 13:00:05",
       nickname: "CSYL",
-      bridge: [327.0110048992845, 1],
+      bridge: [567.9477892625016, 1],
       status: 1,
       statusUid: [],
     },
@@ -67,6 +67,7 @@ function chatWebSocketServer() {
       if (client.readyState === WebSocket.OPEN) {
         chatMessage.forEach(item=>{
           if(!item.bridge||!item.bridge.length){
+            if(!item.statusUid)return
             if(item.statusUid.indexOf(client.user.uid)>-1){
               item.status=0
             }else{
@@ -189,6 +190,7 @@ function chatWebSocketServer() {
             );
             if (f.length) {
               item.status = 0;
+              if(!item.statusUid)item.statusUid=[]
               item.statusUid.push(obj.uid);
             }
           });

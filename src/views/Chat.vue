@@ -150,6 +150,7 @@ onMounted(() => {
     menuList.value.unshift({
       nickname: value + "(YOU)",
     });
+    userInfo=user
     WebSocket.value = useWebSocket(messageList, users, {
       ...user,
       type: 1,
@@ -225,9 +226,18 @@ let reLink = () => {
         <span v-show="!getMsgNum(item)"></span>
       </p>
       <div class="btncon">
-        <el-button size="mini" class="btn" @click="removeUserInfo"
-          >清除用户信息</el-button
+        <el-popconfirm
+          confirm-button-text="确定"
+          cancel-button-text="取消"
+          title="Are you sure to delete this?"
+          @confirm="removeUserInfo"
         >
+          <template #reference>
+            <el-button size="mini" class="btn"
+              >清除用户信息</el-button
+            >
+          </template>
+        </el-popconfirm>
         <el-button size="mini" class="btn" @click="reLink">重置连接</el-button>
       </div>
     </aside>
