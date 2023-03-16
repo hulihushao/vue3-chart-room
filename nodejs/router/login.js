@@ -14,14 +14,14 @@ router.post("/login", (req, res) => {
         data: one,
       });
     } else {
-      res.send({
+      res.status(500).send({
         code: 500,
-        data: "密码错误",
+        message: "密码错误",
       });
     }
   } else {
     res.status(404).send({
-
+      code:404,
       message:"用户不存在"
     })
   }
