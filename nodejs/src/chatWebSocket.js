@@ -63,17 +63,18 @@ function chatWebSocketServer() {
     }
     server.clients.forEach(function each(client) {
       if (client.readyState === WebSocket.OPEN) {
-        chatMessage.forEach(item=>{
-          if(!item.bridge||!item.bridge.length){
-            if(!item.statusUid)return
-            if(item.statusUid.indexOf(client.user.uid)>-1){
-              item.status=0
-            }else{
-              item.status=1
+        chatMessage.forEach((item) => {
+          if (!item.bridge || !item.bridge.length) {
+            if (item.statusUid) {
+              if (item.statusUid.indexOf(client.user.uid) > -1) {
+                item.status = 0;
+              } else {
+                item.status = 1;
+              }
             }
           }
-        })
-        message.chatMessage=chatMessage
+        });
+        message.chatMessage = chatMessage;
         client.send(JSON.stringify(message));
       }
     });
@@ -82,13 +83,13 @@ function chatWebSocketServer() {
     const ip = req.socket.remoteAddress;
     const port = req.socket.remotePort;
     const clientName = ip + ":" + port;
-    
+
     console.log("%s is connected ", clientName);
 
     ws.on("message", function incoming(message) {
       console.log("received: %s from %s", message, clientName);
       const obj = JSON.parse(message);
-      ws.user={uid:obj.uid}
+      ws.user = { uid: obj.uid };
       //1:进入聊天室，2:发送消息，3:获取用户列表，4:删除用户
       switch (obj.type) {
         case 1:
@@ -131,7 +132,7 @@ function chatWebSocketServer() {
             statusUid: [],
           };
           //处理群聊的消息未读数
-          
+
           chatMessage.push(n);
           //设置测试用户的消息回复
           let bridgeTo = obj.bridge.filter((item) => item != obj.uid);
@@ -149,7 +150,7 @@ function chatWebSocketServer() {
               statusUid: [],
             });
           }
-          
+
           broadcast({ ...n, chatMessage });
           break;
         case 3:
@@ -188,7 +189,7 @@ function chatWebSocketServer() {
             );
             if (f.length) {
               item.status = 0;
-              if(!item.statusUid)item.statusUid=[]
+              if (!item.statusUid) item.statusUid = [];
               item.statusUid.push(obj.uid);
             }
           });

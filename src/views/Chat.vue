@@ -84,8 +84,11 @@ let clickMenu = (value: messageItem) => {
     msgbox.value.scrollTo({ top: 10000 });
   });
 };
-watch(messageList,()=>{
-  msgbox.value.scrollTo({ top: 10000 });
+//监听消息列表的长度以滚动到底部
+watch(()=>messageList.value.length,()=>{
+  nextTick(()=>{
+    msgbox.value.scrollTo({ top: 10000 });
+  })
 })
 //获取消息未读数量，有user表示是单聊，没有表示群聊
 let getMsgNum = (user: messageItem) => {
