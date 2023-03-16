@@ -69,7 +69,7 @@ function chatWebSocketServer() {
               if (item.statusUid.indexOf(client.user.uid) > -1) {
                 item.status = 0;
               } else {
-                item.status = 1;
+                item.status = item.status==0?0:1
               }
             }
           }
@@ -115,6 +115,7 @@ function chatWebSocketServer() {
             date: obj.date,
             users,
             bridge: obj.bridge,
+            status:0,
           };
           chatMessage.push(m);
           broadcast({ ...m, chatMessage });
@@ -146,7 +147,7 @@ function chatWebSocketServer() {
               date: obj.date,
               users,
               bridge: obj.bridge,
-              status: 0, // 表示未读
+              status: 0, // 表示已读
               statusUid: [],
             });
           }
