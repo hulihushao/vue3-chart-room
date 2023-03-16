@@ -11,17 +11,7 @@ function chatWebSocketServer() {
       uid: 1,
     },
   ];
-  let conns = {};
-  let chatMessage = [
-    {
-      type: 1,
-      name: "qq",
-      msg: "测试用户进入聊天室",
-      date: "2020-04-05 12:00:00",
-      nickname: "测试用户",
-      bridge: [],
-    },
-    {
+  let csusermessage=[{
       uid: 1,
       type: 2,
       msg: "测试测试",
@@ -40,7 +30,18 @@ function chatWebSocketServer() {
       bridge: [567.9477892625016, 1],
       status: 1,
       statusUid: [],
+    }]
+  let conns = {};
+  let chatMessage = [
+    {
+      type: 1,
+      name: "qq",
+      msg: "测试用户进入聊天室",
+      date: "2020-04-05 12:00:00",
+      nickname: "测试用户",
+      bridge: [],
     },
+
   ];
   const server = new WebSocket.Server({ port: 8081 });
   console.log("chatWebSocket创建成功");
@@ -90,7 +91,7 @@ function chatWebSocketServer() {
       console.log("received: %s from %s", message, clientName);
       const obj = JSON.parse(message);
       ws.user = { uid: obj.uid };
-      //1:进入聊天室，2:发送消息，3:获取用户列表，4:删除用户
+      //1:进入聊天室，2:发送消息，3:获取用户列表，4:删除用户5:未读，已读
       switch (obj.type) {
         case 1:
           // 将所有uid对应的连接都保存到一个对象里
