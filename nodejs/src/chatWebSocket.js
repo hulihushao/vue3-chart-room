@@ -67,7 +67,7 @@ function chatWebSocketServer() {
       if (client.readyState === WebSocket.OPEN) {
         chatMessage.forEach(item=>{
           if(!item.bridge||!item.bridge.length){
-            if(item.statusValue.indexOf(client.user.uid)>-1){
+            if(item.statusUid.indexOf(client.user.uid)>-1){
               item.status=0
             }else{
               item.status=1

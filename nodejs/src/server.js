@@ -26,7 +26,7 @@ app.use("", getFeature);
 app.get("/data", (err, res) => {
   let userData = require("../data/user.json");
   console.log(userData);
-  res.status(200).send({
+  res.status(400).send({
     code: 200,
     data: userData,
   });

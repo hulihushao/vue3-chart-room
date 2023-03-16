@@ -61,7 +61,8 @@ let getData=()=>{
   axios.get("/api/data").then(res=>{
     textarea.value=JSON.stringify(res.data)
   }).catch(err=>{
-    textarea.value=JSON.stringify(err)
+
+    textarea.value=JSON.stringify(err)+JSON.stringify(err.response)
   })
 }
 let insertData=()=>{
@@ -97,7 +98,7 @@ let insertData=()=>{
 
 <style>
 @media (min-width: 1024px) {
-  .about {
+  about {
     min-height: 100vh;
     display: flex;
     align-items: center;
