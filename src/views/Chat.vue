@@ -1,18 +1,28 @@
 <script setup lang="ts">
+//引入
 import moment from "moment";
-import { ref, nextTick, watchEffect, reactive, onMounted, computed } from "vue";
+import {onBeforeUnmount ,ref, nextTick, watch, reactive, onMounted, computed } from "vue";
 import { ElMessage, ElMessageBox, ElLoading } from "element-plus";
 import { useWebSocket, useSend, useOnMessage } from "../hooks/useWebSocket.js";
+//聊天列表数据
 let menuList = ref<object[]>([]);
-
+//输入框数据
 let textarea = ref("");
+//聊天类型:群聊或单聊
 let chatType = ref(0);
+//和谁单聊的数组
 let bridge = ref([]);
+//当前用户uid
 let uid = ref<number | string>(1);
+//所有用户
 let users = ref([]);
+//聊天框顶部标题
 let title = ref("");
+//webSocket
 let WebSocket = ref(null);
+//用户信息
 let userInfo = {};
+//当前消息列表
 let cMessage = ref([]);
 //测试message用例
 let messageList = ref([
@@ -43,12 +53,13 @@ let messageList = ref([
     bridge: [1, 2],
   },
 ]);
-
+//用户信息
 interface messageItem {
   usertype: number;
   uid: number;
   nickname: string;
 }
+//ref元素
 let msgbox = ref();
 //菜单列表点击
 let clickMenu = (value: messageItem) => {
@@ -69,9 +80,13 @@ let clickMenu = (value: messageItem) => {
       messages: cMessage.value,
       date: moment().format("YYYY-MM-DD HH:mm:ss"),
     });
+    //滚动到底部
     msgbox.value.scrollTo({ top: 10000 });
   });
 };
+watch(messageList,()=>{
+  msgbox.value.scrollTo({ top: 10000 });
+})
 //获取消息未读数量，有user表示是单聊，没有表示群聊
 let getMsgNum = (user: messageItem) => {
   if (!user) {
@@ -165,6 +180,9 @@ onMounted(() => {
     });
   });
 });
+onBeforeUnmount(()=>{
+  WebSocket.value.close()
+})
 interface sendMessage{
   type:number,
   date:string,
