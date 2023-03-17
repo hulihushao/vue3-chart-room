@@ -113,17 +113,6 @@ let getMsgNum = (user: messageItem) => {
       return !item.bridge.length && item.status === 1;
     }).length;
   } else {
-    JSON.stringify(
-      messageList.value.filter((m) => {
-        return (
-          m.bridge.length &&
-          m.status == 1 &&
-          m.uid == user.uid &&
-          m.uid &&
-          user.uid
-        );
-      })
-    );
     // 增加了uid相同判断，确认是当前聊天对应人的消息数组
     return messageList.value.filter((m) => {
       let value = [...m.bridge];
