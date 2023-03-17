@@ -11,7 +11,8 @@ function chatWebSocketServer() {
       uid: 1,
     },
   ];
-  let csusermessage=[{
+  let csusermessage = [
+    {
       uid: 1,
       type: 2,
       msg: "测试测试",
@@ -30,7 +31,8 @@ function chatWebSocketServer() {
       bridge: [567.9477892625016, 1],
       status: 1,
       statusUid: [],
-    }]
+    },
+  ];
   let conns = {};
   let chatMessage = [
     {
@@ -41,7 +43,6 @@ function chatWebSocketServer() {
       nickname: "测试用户",
       bridge: [],
     },
-
   ];
   const server = new WebSocket.Server({ port: 8081 });
   console.log("chatWebSocket创建成功");
@@ -64,13 +65,14 @@ function chatWebSocketServer() {
     }
     server.clients.forEach(function each(client) {
       if (client.readyState === WebSocket.OPEN) {
+        //处理群聊消息的读取状态息的
         chatMessage.forEach((item) => {
           if (!item.bridge || !item.bridge.length) {
             if (item.statusUid) {
               if (item.statusUid.indexOf(client.user.uid) > -1) {
                 item.status = 0;
               } else {
-                item.status = item.status==0?0:1
+                item.status = item.status == 0 ? 0 : 1;
               }
             }
           }
@@ -108,6 +110,12 @@ function chatWebSocketServer() {
             });
           }
           console.log(isSelf, obj.uid, users, "所有用户");
+          if (!isSelf) {
+            csusermessage[0].bridge[0] = obj.uid;
+            csusermessage[1].bridge[0] = obj.uid;
+            csusermessage[1].uid = obj.uid;
+            chatMessage.push(...csusermessage);
+          }
           let m = {
             type: 1,
             nickname: obj.nickname,
@@ -116,7 +124,7 @@ function chatWebSocketServer() {
             date: obj.date,
             users,
             bridge: obj.bridge,
-            status:0,
+            status: 0,
           };
           chatMessage.push(m);
           broadcast({ ...m, chatMessage });
@@ -133,12 +141,11 @@ function chatWebSocketServer() {
             status: 1, // 表示未读
             statusUid: [],
           };
-          //处理群聊的消息未读数
 
           chatMessage.push(n);
           //设置测试用户的消息回复
           let bridgeTo = obj.bridge.filter((item) => item != obj.uid);
-          if (bridgeTo.length&&!conns[bridgeTo[0]]) {
+          if (bridgeTo.length && !conns[bridgeTo[0]]) {
             chatMessage.push({
               type: 2,
               nickname: users.filter((item) => item.uid == bridgeTo[0])[0]
