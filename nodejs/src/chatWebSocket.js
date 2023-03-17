@@ -111,10 +111,12 @@ function chatWebSocketServer() {
           }
           console.log(isSelf, obj.uid, users, "所有用户");
           if (!isSelf) {
-            csusermessage[0].bridge[0] = obj.uid;
-            csusermessage[1].bridge[0] = obj.uid;
-            csusermessage[1].uid = obj.uid;
-            chatMessage.push(...csusermessage);
+            let curmsg=JSON.parse(JSON.stringify(csusermessage))
+            curmsg[0].bridge[0] = obj.uid;
+            curmsg[1].bridge[0] = obj.uid;
+            curmsg[1].uid = obj.uid;
+            chatMessage.push(...curmsg);
+                        console.log(chatMessage)
           }
           let m = {
             type: 1,
