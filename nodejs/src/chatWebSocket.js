@@ -27,7 +27,7 @@ function chatWebSocketServer() {
       type: 2,
       msg: "测试测试222",
       date: "2023-05-25 13:00:05",
-      nickname: "CSYL",
+      nickname: "CS",
       bridge: [567.9477892625016, 1],
       status: 1,
       statusUid: [],
@@ -56,6 +56,7 @@ function chatWebSocketServer() {
   });
 
   let broadcast = (message) => {
+    console.log(message.chatMessage.filter(item=>item.status))
     // 单聊
     if (message.bridge && message.bridge.length) {
       message.bridge.forEach((item) => {
@@ -115,8 +116,8 @@ function chatWebSocketServer() {
             curmsg[0].bridge[0] = obj.uid;
             curmsg[1].bridge[0] = obj.uid;
             curmsg[1].uid = obj.uid;
+            curmsg[1].nickname=obj.nickname
             chatMessage.push(...curmsg);
-                        console.log(chatMessage)
           }
           let m = {
             type: 1,

@@ -1,7 +1,15 @@
 <script setup lang="ts">
 //引入
 import moment from "moment";
-import {onBeforeUnmount ,ref, nextTick, watch, reactive, onMounted, computed } from "vue";
+import {
+  onBeforeUnmount,
+  ref,
+  nextTick,
+  watch,
+  reactive,
+  onMounted,
+  computed,
+} from "vue";
 import { ElMessage, ElMessageBox, ElLoading } from "element-plus";
 import { useWebSocket, useSend, useOnMessage } from "../hooks/useWebSocket.js";
 //聊天列表数据
@@ -63,7 +71,11 @@ interface messageItem {
 let msgbox = ref();
 //菜单列表点击
 let clickMenu = (value: messageItem) => {
-  if (!value.usertype) return;
+  if (!value.usertype) {
+    chatType.value = 0;
+    title.value = "";
+    return;
+  }
 
   chatType.value = value.usertype;
   title.value = value.nickname;
@@ -72,7 +84,7 @@ let clickMenu = (value: messageItem) => {
   } else if (value.usertype == 2) {
     bridge.value = [uid.value, value.uid];
   }
-//dom更新后发送数据修改消息读取状态
+  //dom更新后发送数据修改消息读取状态
   nextTick(() => {
     useSend(WebSocket, {
       type: 5,
@@ -85,22 +97,43 @@ let clickMenu = (value: messageItem) => {
   });
 };
 //监听消息列表的长度以滚动到底部
-watch(()=>messageList.value.length,()=>{
-  nextTick(()=>{
-    msgbox.value.scrollTo({ top: 10000 });
-  })
-})
+watch(
+  () => messageList.value.length,
+  () => {
+    nextTick(() => {
+      msgbox.value.scrollTo({ top: 10000 });
+    });
+  }
+);
 //获取消息未读数量，有user表示是单聊，没有表示群聊
 let getMsgNum = (user: messageItem) => {
-  if (user.usertype==1) {
+  if (user.usertype == 1) {
     // 群聊，brige为空数组，找未读消息数
     return messageList.value.filter((item) => {
       return !item.bridge.length && item.status === 1;
     }).length;
   } else {
+    JSON.stringify(
+      messageList.value.filter((m) => {
+        return (
+          m.bridge.length &&
+          m.status == 1 &&
+          m.uid == user.uid &&
+          m.uid &&
+          user.uid
+        );
+      })
+    );
     // 增加了uid相同判断，确认是当前聊天对应人的消息数组
     return messageList.value.filter((m) => {
-      return m.bridge.length && m.status == 1 && m.uid == user.uid;
+      let value = [...m.bridge];
+      let bridgeValue = [...bridge.value];
+      return (
+        m.bridge.length &&
+        m.bridge.indexOf(userInfo.uid) > -1 &&
+        m.status == 1 &&
+        m.uid == user.uid
+      );
     }).length;
   }
 };
@@ -173,7 +206,7 @@ onMounted(() => {
     menuList.value.unshift({
       nickname: value + "(YOU)",
     });
-    userInfo=user
+    userInfo = user;
     WebSocket.value = useWebSocket(messageList, users, {
       ...user,
       type: 1,
@@ -189,29 +222,27 @@ onMounted(() => {
   });
 });
 //组件销毁前关闭连接
-onBeforeUnmount(()=>{
-  WebSocket.value.close()
-})
-interface sendMessage{
-  type:number,
-  date:string,
-  users:object[],
-  msg:string,
-  bridge:number|string[],
-
+onBeforeUnmount(() => {
+  WebSocket.value.close();
+});
+interface sendMessage {
+  type: number;
+  date: string;
+  users: object[];
+  msg: string;
+  bridge: number | string[];
 }
 //发送消息
 let submit = () => {
-  let sendMsg:sendMessage={
+  let sendMsg: sendMessage = {
     ...userInfo,
     type: 2,
     date: moment().format("YYYY-MM-DD HH:mm:ss"),
     users: users.value,
     msg: textarea.value,
     bridge: bridge.value,
-
-  }
-  messageList.value.push(sendMsg)
+  };
+  messageList.value.push(sendMsg);
   useSend(WebSocket, sendMsg);
   textarea.value = "";
 };
@@ -274,9 +305,7 @@ let reLink = () => {
           @confirm="removeUserInfo"
         >
           <template #reference>
-            <el-button size="mini" class="btn"
-              >清除用户信息</el-button
-            >
+            <el-button size="mini" class="btn">清除用户信息</el-button>
           </template>
         </el-popconfirm>
         <el-button size="mini" class="btn" @click="reLink">重置连接</el-button>
