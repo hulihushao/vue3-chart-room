@@ -72,7 +72,7 @@ let clickMenu = (value: messageItem) => {
   } else if (value.usertype == 2) {
     bridge.value = [uid.value, value.uid];
   }
-
+//dom更新后发送数据修改消息读取状态
   nextTick(() => {
     useSend(WebSocket, {
       type: 5,
@@ -104,6 +104,7 @@ let getMsgNum = (user: messageItem) => {
     }).length;
   }
 };
+//当前消息数组
 let currentMessage = computed(() => {
   let data = messageList.value.filter((item) => {
     let value = [...item.bridge];
@@ -116,6 +117,7 @@ let currentMessage = computed(() => {
   cMessage.value = data;
   return data;
 });
+//在线用户数组
 let usersList = computed(() => {
   if (!menuList.value.length) return users.value;
   let index = users.value.findIndex(
@@ -126,6 +128,9 @@ let usersList = computed(() => {
   return users.value;
 });
 onMounted(() => {
+  //判断本地是否有用户信息
+  //有则使用当前信息进行创建连接
+  //无则弹窗新建用户并连接服务
   let u = localStorage.getItem("userInfo");
   if (u) {
     userInfo = JSON.parse(u);
@@ -143,7 +148,7 @@ onMounted(() => {
     });
     return;
   }
-
+  //连接服务获取所有用户列表
   WebSocket.value = useWebSocket(messageList, users, {
     type: 3,
   });
@@ -183,6 +188,7 @@ onMounted(() => {
     });
   });
 });
+//组件销毁前关闭连接
 onBeforeUnmount(()=>{
   WebSocket.value.close()
 })
@@ -194,6 +200,7 @@ interface sendMessage{
   bridge:number|string[],
 
 }
+//发送消息
 let submit = () => {
   let sendMsg:sendMessage={
     ...userInfo,
@@ -208,6 +215,7 @@ let submit = () => {
   useSend(WebSocket, sendMsg);
   textarea.value = "";
 };
+//发送数据删除当前用户
 let removeUserInfo = () => {
   useSend(WebSocket, {
     type: 4,
@@ -217,6 +225,7 @@ let removeUserInfo = () => {
   localStorage.removeItem("userInfo");
   location.reload();
 };
+//重置连接
 let reLink = () => {
   const loading = ElLoading.service({
     lock: true,
