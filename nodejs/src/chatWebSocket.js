@@ -67,6 +67,8 @@ function chatWebSocketServer() {
       });
       return;
     }
+    let toUids=users.filter(item=>item.toUid==0)
+    
     server.clients.forEach(function each(client) {
       
       if (client.readyState === WebSocket.OPEN) {
@@ -74,7 +76,7 @@ function chatWebSocketServer() {
         chatMessage.forEach((item) => {
           if (!item.bridge || !item.bridge.length) {
             if (item.statusUid) {
-              if (item.statusUid.indexOf(client.user.uid) > -1) {
+              if (item.statusUid.indexOf(client.user.uid) > -1||toUids.filter(it=>it.uid=client.user.uid).length) {
                 item.status = 0;
               } else {
                 if(toUid==0){
