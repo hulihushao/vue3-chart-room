@@ -44,5 +44,10 @@ router.post("/insertPoint",(req,res)=>{
       })
     })
 })
+router.post("/updateFeature",(req,res)=>{
+  let {fid}=req.body
+  let featureData=require("../data/features.json")
+  let getFeatureById=featureData.features.findIndex(item=>item.id==fid)
+})
 // 导出
 module.exports = router;
