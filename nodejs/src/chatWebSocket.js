@@ -4,6 +4,7 @@ function chatWebSocketServer() {
     {
       nickname: "测试群聊",
       usertype: 1,
+      uid: 0,
     },
     {
       nickname: "测试用户",
@@ -56,15 +57,18 @@ function chatWebSocketServer() {
   });
 
   let broadcast = (message) => {
-    console.log(message.chatMessage.filter(item=>item.status))
+    console.log(message.chatMessage.filter((item) => item.status));
+    let toUid = users.filter((item) => item.uid == message.uid)[0].toUid;
     // 单聊
     if (message.bridge && message.bridge.length) {
+      if (message.bridge.indexOf(toUid) > -1) message.status = 0;
       message.bridge.forEach((item) => {
         conns[item] && conns[item].send(JSON.stringify(message));
       });
       return;
     }
     server.clients.forEach(function each(client) {
+      
       if (client.readyState === WebSocket.OPEN) {
         //处理群聊消息的读取状态息的
         chatMessage.forEach((item) => {
@@ -73,7 +77,11 @@ function chatWebSocketServer() {
               if (item.statusUid.indexOf(client.user.uid) > -1) {
                 item.status = 0;
               } else {
-                item.status = item.status == 0 ? 0 : 1;
+                if(toUid==0){
+                  item.status=0
+                }else{
+                  item.status = item.status == 0 ? 0 : 1;
+                }
               }
             }
           }
@@ -112,11 +120,11 @@ function chatWebSocketServer() {
           }
           console.log(isSelf, obj.uid, users, "所有用户");
           if (!isSelf) {
-            let curmsg=JSON.parse(JSON.stringify(csusermessage))
+            let curmsg = JSON.parse(JSON.stringify(csusermessage));
             curmsg[0].bridge[0] = obj.uid;
             curmsg[1].bridge[0] = obj.uid;
             curmsg[1].uid = obj.uid;
-            curmsg[1].nickname=obj.nickname
+            curmsg[1].nickname = obj.nickname;
             chatMessage.push(...curmsg);
           }
           let m = {
@@ -191,6 +199,7 @@ function chatWebSocketServer() {
           broadcast({ ...x, chatMessage });
           break;
         case 5:
+          users.filter((item) => item.uid == obj.uid)[0].toUid = obj.toUid;
           let messages = obj.messages;
           chatMessage.forEach((item) => {
             let f = messages.filter(

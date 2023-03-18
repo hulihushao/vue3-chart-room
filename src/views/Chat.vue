@@ -74,6 +74,7 @@ let clickMenu = (value: messageItem) => {
   if (!value.usertype) {
     chatType.value = 0;
     title.value = "";
+    bridge.value=[]
     return;
   }
 
@@ -89,6 +90,7 @@ let clickMenu = (value: messageItem) => {
     useSend(WebSocket, {
       type: 5,
       ...userInfo,
+      toUid:value.uid,
       messages: cMessage.value,
       date: moment().format("YYYY-MM-DD HH:mm:ss"),
     });
