@@ -70,7 +70,6 @@ function chatWebSocketServer() {
     let toUids=users.filter(item=>item.toUid==0)
     
     server.clients.forEach(function each(client) {
-      
       if (client.readyState === WebSocket.OPEN) {
         //处理群聊消息的读取状态息的
         chatMessage.forEach((item) => {
@@ -78,12 +77,8 @@ function chatWebSocketServer() {
             if (item.statusUid) {
               if (item.statusUid.indexOf(client.user.uid) > -1||toUids.filter(it=>it.uid=client.user.uid).length) {
                 item.status = 0;
-              } else {
-                if(toUid==0){
-                  item.status=0
-                }else{
+              } else {                
                   item.status = item.status == 0 ? 0 : 1;
-                }
               }
             }
           }
