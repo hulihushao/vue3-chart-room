@@ -57,7 +57,6 @@ function chatWebSocketServer() {
   });
 
   let broadcast = (message) => {
-    console.log(message.chatMessage.filter((item) => item.status));
     let toUid = users.filter((item) => item.uid == message.uid)[0].toUid;
     // 单聊
     if (message.bridge && message.bridge.length) {
