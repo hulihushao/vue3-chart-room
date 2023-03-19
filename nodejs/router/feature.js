@@ -4,11 +4,13 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/features/:userId", (req, res) => {
-  let {userId}=req.params
+  let { userId } = req.params;
   let featureData = require("../data/features.json");
-  let features=featureData.features.filter(item=>item.properties.uid==userId)
-  featureData.features=features
-  featureData.totalFeatures=features.length
+  let features = featureData.features.filter(
+    (item) => item.properties.uid == userId
+  );
+  featureData.features = features;
+  featureData.totalFeatures = features.length;
   console.log(featureData);
   res.send({
     code: 200,
@@ -18,7 +20,7 @@ router.get("/features/:userId", (req, res) => {
 router.post("/insertPoint", (req, res) => {
   console.log(req.body);
   let featureData = require("../data/features.json");
-  let { uid,xy, map_point_name, create_time, comment, lxtime } = req.body;
+  let { uid, xy, map_point_name, create_time, comment, lxtime } = req.body;
   let id = featureData.features.length + 1;
   let data = {
     geometry: {
@@ -35,7 +37,7 @@ router.post("/insertPoint", (req, res) => {
       modifyTime: create_time,
       createTime: create_time,
       id: id,
-      uid:uid,
+      uid: uid,
       mpLayer: "0",
     },
   };
@@ -54,26 +56,35 @@ router.post("/insertPoint", (req, res) => {
     }
   );
 });
-router.post("/updateFeature", (req, res) => {
-  let { fid,uid, map_point_name, modify_time, comment, lxtime } = req.body;
+router.post("/updatePoint", (req, res) => {
+  let { fid, uid, map_point_name, modify_time, comment, lxtime } = req.body;
   write(
     "features.json",
     (arr) => {
-      let getFeatureById = arr.features.filter((item) => item.properties.id == fid&&item.properties.uid==uid);
-
-      if (getFeatureById.length) {
-        getFeature[0].properties.comment = comment;
-        getFeature[0].properties.lxtime = lxtime;
-        getFeature[0].properties.modifyTime = modify_time;
-        getFeature[0].properties.mapPointName = map_point_name;
+      let index = arr.features.findIndex(
+        (item) => item.properties.id == fid && item.properties.uid == uid
+      );
+      if (index >= 0) {
+        arr.features[index].properties.comment = comment;
+        arr.features[index].properties.lxtime = lxtime;
+        arr.features[index].properties.modifyTime = modify_time;
+        arr.features[index].properties.mapPointName = map_point_name;
       }
-      return { arr, obj: getFeatureById };
+      return { arr, obj: arr.features[index] };
     },
     (newData) => {
-      res.send({
-        code: 200,
-        data: newData,
-      });
+      console.log(newData);
+      if (newData) {
+        res.send({
+          code: 200,
+          data: newData,
+        });
+      } else {
+        res.status(404).send({
+          code: 404,
+          message: "点位不存在",
+        });
+      }
     }
   );
 });
