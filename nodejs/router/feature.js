@@ -3,8 +3,12 @@ let { write } = require("../src/fileWrite");
 const express = require("express");
 const router = express.Router();
 
-router.get("/features", (req, res) => {
+router.get("/features/:userId", (req, res) => {
+  let {userId}=req.params
   let featureData = require("../data/features.json");
+  let features=featureData.features.filter(item=>item.properties.uid==userId)
+  featureData.features=features
+  featureData.totalFeatures=features.length
   console.log(featureData);
   res.send({
     code: 200,
@@ -14,7 +18,7 @@ router.get("/features", (req, res) => {
 router.post("/insertPoint", (req, res) => {
   console.log(req.body);
   let featureData = require("../data/features.json");
-  let { xy, map_point_name, create_time, comment, lxtime } = req.body;
+  let { uid,xy, map_point_name, create_time, comment, lxtime } = req.body;
   let id = featureData.features.length + 1;
   let data = {
     geometry: {
@@ -31,6 +35,7 @@ router.post("/insertPoint", (req, res) => {
       modifyTime: create_time,
       createTime: create_time,
       id: id,
+      uid:uid,
       mpLayer: "0",
     },
   };
@@ -50,11 +55,11 @@ router.post("/insertPoint", (req, res) => {
   );
 });
 router.post("/updateFeature", (req, res) => {
-  let { fid, map_point_name, modify_time, comment, lxtime } = req.body;
+  let { fid,uid, map_point_name, modify_time, comment, lxtime } = req.body;
   write(
     "features.json",
     (arr) => {
-      let getFeatureById = arr.features.filter((item) => item.id == fid);
+      let getFeatureById = arr.features.filter((item) => item.properties.id == fid&&item.properties.uid==uid);
 
       if (getFeatureById.length) {
         getFeature[0].properties.comment = comment;

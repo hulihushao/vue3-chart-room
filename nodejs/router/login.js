@@ -11,7 +11,7 @@ router.post("/login", (req, res) => {
     if (one[0].pwd == pwd) {
       res.send({
         code: 200,
-        data: one,
+        data: [{userId:one[0].userId,userName:one[0].userName}],
       });
     } else {
       res.status(500).send({
