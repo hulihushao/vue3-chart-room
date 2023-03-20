@@ -73,7 +73,7 @@ router.post("/updatePoint", (req, res) => {
       return { arr, obj: arr.features[index] };
     },
     (newData) => {
-      console.log(newData);
+      console.log(newData,11111);
       if (newData) {
         res.send({
           code: 200,
@@ -88,5 +88,8 @@ router.post("/updatePoint", (req, res) => {
     }
   );
 });
+router.post("/delFeature",(req,res)=>{
+  
+})
 // 导出
 module.exports = router;
