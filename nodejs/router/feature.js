@@ -73,7 +73,6 @@ router.post("/updatePoint", (req, res) => {
       return { arr, obj: arr.features[index] };
     },
     (newData) => {
-      console.log(newData,11111);
       if (newData) {
         res.send({
           code: 200,
