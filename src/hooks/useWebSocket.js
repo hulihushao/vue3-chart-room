@@ -21,7 +21,7 @@ export function useWebSocket(messageList,users, message,callback) {
   };
   socket.value.onclose = () => {
     ElMessage.error("连接已关闭");
-    socket.close();
+    socket.value.close();
   };
   return socket.value
 }
