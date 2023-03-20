@@ -88,7 +88,33 @@ router.post("/updatePoint", (req, res) => {
   );
 });
 router.post("/delFeature",(req,res)=>{
-  
+  let {fid,uid}=req.body
+  write(
+    "features.json",
+    (arr) => {
+      let index = arr.features.findIndex(
+        (item) => item.properties.id == fid && item.properties.uid == uid
+      );
+      let delFeature
+      if (index >= 0) {
+        delFeature=arr.features.splice(index,1)
+      }
+      return { arr, obj: delFeature };
+    },
+    (newData) => {
+      if (newData) {
+        res.send({
+          code: 200,
+          data: newData,
+        });
+      } else {
+        res.status(404).send({
+          code: 404,
+          message: "点位不存在",
+        });
+      }
+    }
+  )
 })
 // 导出
 module.exports = router;
