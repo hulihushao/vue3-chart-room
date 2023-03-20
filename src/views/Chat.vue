@@ -296,10 +296,10 @@ let reLink = () => {
           @confirm="removeUserInfo"
         >
           <template #reference>
-            <el-button size="mini" class="btn">清除用户信息</el-button>
+            <el-button size="small" class="btn">清除用户信息</el-button>
           </template>
         </el-popconfirm>
-        <el-button size="mini" class="btn" @click="reLink">重置连接</el-button>
+        <el-button size="small" class="btn" @click="reLink">重置连接</el-button>
       </div>
     </aside>
     <main class="main-body" v-if="chatType == 0">
