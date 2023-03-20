@@ -92,10 +92,27 @@ router.post("/delFeature",(req,res)=>{
   write(
     "features.json",
     (arr) => {
+      let delFeature
+      if(Array.isArray(fid)){
+        delFeature=[]
+        fid.forEach(item=>{
+          arr.features=arr.features.filter(itm=>{
+            if(itm.properties.uid==uid){
+              if(itm.properties.id!=item){
+                return itm
+              }else{
+                delFeature.push(itm)
+              }
+            }else{
+              return itm
+            }
+          })
+        })
+        return {arr,obj:delFeature}
+      }
       let index = arr.features.findIndex(
         (item) => item.properties.id == fid && item.properties.uid == uid
       );
-      let delFeature
       if (index >= 0) {
         delFeature=arr.features.splice(index,1)
       }
