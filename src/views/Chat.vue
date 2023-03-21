@@ -411,13 +411,13 @@ let reLink = () => {
   }
   .main-body {
     flex: 1;
-    height: 500px;
+    height: 100%;
     border: 1px solid red;
     display: flex;
     flex-direction: column;
     .no-chat {
       text-align: center;
-      line-height: 500px;
+      line-height: 85vh;
       color: #ccc;
     }
     .title {

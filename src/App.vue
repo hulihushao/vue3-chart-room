@@ -15,7 +15,9 @@
       >chat聊天室</router-link
     >
   </div>
-  <router-view />
+  <div style="height: 85vh">
+    <router-view />
+  </div>
 </template>
 
 <script setup lang="ts">
