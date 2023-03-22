@@ -6,7 +6,7 @@
         "coordinates": [120.33, 30.22],
         "type": "Point"
       },
-      "id": "MAPPOINT.3",
+      "id": "MAPPOINT.0",
       "geometry_name": "Pnt",
       "type": "Feature",
       "properties": {
@@ -14,7 +14,8 @@
         "modifyTime": "2022-06-02",
         "createTime": "2022-06-02",
         "comment": "旅游",
-        "id": "3",
+        "id": "0",
+        "uid":1,
         "mpLayer": "0",
         "encodeStr": "c137bea4ddea45258670b84edeb1605c"
       }
@@ -28,12 +29,10 @@
       "geometry_name": "Pnt",
       "type": "Feature",
       "properties": {
-        "map_point_name": "hhdhdhb",
-        "comment": "00000",
         "lxtime": "2023-03-06 00:0:0",
-        "create_time": "2023-03-10 11:29:58",
         "xy": "120.01271593384446,30.620422437787056",
         "mapPointName": "123",
+        "comment": "00000",
         "modifyTime": "2023-03-20 13:20:38",
         "createTime": "2023-03-10 11:29:58",
         "id": 2,
@@ -50,12 +49,10 @@
       "geometry_name": "Pnt",
       "type": "Feature",
       "properties": {
-        "map_point_name": "hj",
-        "comment": "",
         "lxtime": "",
-        "create_time": "2023-03-10 11:31:05",
         "xy": "119.7834268352017,29.92258708924055",
         "mapPointName": "hj",
+        "comment": "",
         "modifyTime": "2023-03-10 11:31:05",
         "createTime": "2023-03-10 11:31:05",
         "id": 3,
@@ -72,12 +69,10 @@
       "geometry_name": "Pnt",
       "type": "Feature",
       "properties": {
-        "map_point_name": "cds",
-        "comment": "cs",
         "lxtime": "2023-03-12 00:0:0",
-        "create_time": "2023-03-18 16:39:16",
         "xy": "119.90264880470933,30.067138709127903",
         "mapPointName": "cds",
+        "comment": "cs",
         "modifyTime": "2023-03-18 16:39:16",
         "createTime": "2023-03-18 16:39:16",
         "id": 4,

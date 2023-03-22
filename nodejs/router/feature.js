@@ -31,9 +31,9 @@ router.post("/insertPoint", (req, res) => {
     geometry_name: "Pnt",
     type: "Feature",
     properties: {
-      comment,
       lxtime,
       mapPointName: map_point_name,
+      comment,
       modifyTime: create_time,
       createTime: create_time,
       id: id,
