@@ -108,6 +108,7 @@ router.post("/delFeature",(req,res)=>{
             }
           })
         })
+        arr.totalFeatures=arr.totalFeatures-fid.length
         return {arr,obj:delFeature}
       }
       let index = arr.features.findIndex(
@@ -116,6 +117,7 @@ router.post("/delFeature",(req,res)=>{
       if (index >= 0) {
         delFeature=arr.features.splice(index,1)
       }
+      arr.totalFeatures=arr.totalFeatures-1
       return { arr, obj: delFeature };
     },
     (newData) => {
