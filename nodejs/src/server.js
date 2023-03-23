@@ -22,6 +22,10 @@ app.use("/login", login);
 const getFeature = require("../router/feature");
 app.use("/feature", getFeature);
 
+const file_CZ = require("../router/file");
+app.use("/file", file_CZ);
+
+//测试用接口
 //get接口的开发
 app.get("/data", (err, res) => {
   let userData = require("../data/user.json");
