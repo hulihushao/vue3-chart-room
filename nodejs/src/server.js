@@ -17,10 +17,10 @@ app.use(function (req, res, next) {
 });
 
 const login = require("../router/login");
-app.use("", login);
+app.use("/login", login);
 
 const getFeature = require("../router/feature");
-app.use("", getFeature);
+app.use("/feature", getFeature);
 
 //get接口的开发
 app.get("/data", (err, res) => {
