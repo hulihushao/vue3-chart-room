@@ -2,7 +2,7 @@ import { ref, reactive } from "vue";
 import { ElMessage } from "element-plus";
 export function useWebSocket(messageList,users, message,callback) {
   let socket = ref(null);
-  socket.value = new WebSocket("ws://192.168.241.2:8081");
+  socket.value = new WebSocket("wss://192.168.241.2:8081");
   socket.value.addEventListener("open", function () {
     ElMessage.success("连接服务器成功");
     useSend(socket, message);
