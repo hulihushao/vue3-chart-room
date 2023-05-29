@@ -22,32 +22,32 @@ export default defineConfig({
     },
   },
   build: {
-      outDir: "dist", // 指定输出路径
-      cssCodeSplit: true, // 启用 CSS 代码拆分
-      sourcemap: false, // 构建后是否生成 source map 文件
-      chunkSizeWarningLimit: 1500,
-      minify: "terser",
-      terserOptions: {
-        compress: {
-          drop_console: true,
-          drop_debugger: true,
+    outDir: "dist", // 指定输出路径
+    cssCodeSplit: true, // 启用 CSS 代码拆分
+    sourcemap: false, // 构建后是否生成 source map 文件
+    chunkSizeWarningLimit: 1500,
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+    rollupOptions: {
+      output: {
+        chunkFileNames: "static/js/[name]-[hash].js",
+        entryFileNames: "static/js/[name]-[hash].js",
+        assetFileNames: "static/[ext]/[name]-[hash].[ext]",
+        manualChunks(id) {
+          //静态资源分拆打包
+          if (id.includes("node_modules")) {
+            return id
+              .toString()
+              .split("node_modules/")[1]
+              .split("/")[0]
+              .toString();
+          }
         },
       },
-      rollupOptions: {
-        output: {
-          chunkFileNames: "static/js/[name]-[hash].js",
-          entryFileNames: "static/js/[name]-[hash].js",
-          assetFileNames: "static/[ext]/[name]-[hash].[ext]",
-          manualChunks(id) {
-            //静态资源分拆打包
-            if (id.includes("node_modules")) {
-              return id
-                .toString()
-                .split("node_modules/")[1]
-                .split("/")[0]
-                .toString();
-            }
-          },
-        },
-      }
-});
+    }
+  });
